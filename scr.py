@@ -21,6 +21,9 @@ sentiment2idx = {
 }
 num_aspect = len(aspect2idx)
 
+idx2aspect = dict(zip(aspect2idx.values(), aspect2idx.keys()))
+idx2sentiment = dict(zip(sentiment2idx.values(),sentiment2idx.keys()))
+
 # # Convert label cell to tensor
 # def convert_label(cell):
 #     return torch.tensor([float(x) for x in cell.strip('[]').split()])
@@ -215,7 +218,15 @@ def infer_single_comment(model, comment):
     #     "Aspect": [aspect_labels[i] for i, val in enumerate(pred_category) if val >= 0.5],
     #     "Sentiment": [sentiment_labels[s] for s in pred_sentiment if s > 0]
     # }
-    return pred_category,pred_sentiment
+    res = ''
+    pred_category = pred_category.squeeze()
+    pred_sentiment = pred_sentiment.squeeze()
+    for i, v in enumerate(pred_category):
+        if v!=0:
+            res += f'{idx2aspect[i]}: {idx2sentiment[int(pred_sentiment[i])]}'
+            res += '\n'
+
+    return res
 
 
 w2v = 'W2V_150.txt'
