@@ -159,7 +159,7 @@ def infer_single_comment(comment):
 
     return res
 
-w2v = 'VNese-Aspect-based-Sentiment-Analysis\W2V_150.txt'
+w2v = 'W2V_150.txt'
 embedding_dim = 150
 word_to_vec = {}
 with open(w2v, 'r', encoding='utf-8') as file:
@@ -182,10 +182,11 @@ categories = aspect2idx.keys()
 polarities = sentiment2idx.keys()
 model = Cae(embedding_layer, categories, polarities)
 
-model.load_state_dict(torch.load('VNese-Aspect-based-Sentiment-Analysis\CAE_checkpoint50.pth'))
+model.load_state_dict(torch.load('VNese-Aspect-based-Sentiment-Analysis\CAE_checkpoint50.pth', map_location=torch.device('cpu')))
 model.eval()
 
 sample_comment = "điện thoại pin tốt,nhưng giá cả rất đắt không hợp lý"
-x, y = infer_single_comment(model=model, comment=sample_comment)
-print("pred_cate", x)
-print("pred_sent",y)
+res = infer_single_comment(comment=sample_comment)
+print(res)
+# print("pred_cate", x)
+# print("pred_sent",y)
